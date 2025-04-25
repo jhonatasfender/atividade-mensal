@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar } from './components/Calendar';
 import { ActivityModal } from './components/ActivityModal';
 import { Clock, Calendar as CalendarIcon, Download } from 'lucide-react';
@@ -7,7 +6,7 @@ import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { SignIn, SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 import { useSupabaseClient } from './lib/supabase';
-
+import { ThemeToggle } from './components/ThemeToggle';
 
 interface Activity {
   id?: string;
@@ -79,7 +78,6 @@ function App() {
 
     try {
       if (existingActivity?.id) {
-        // Update existing activity
         const { error } = await supabase
           .from('activities')
           .update({
@@ -92,7 +90,6 @@ function App() {
 
         if (error) throw error;
       } else {
-        // Create new activity
         const { error } = await supabase
           .from('activities')
           .insert({
@@ -142,7 +139,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
       <SignedOut>
         <div className="min-h-screen flex items-center justify-center">
           <SignIn />
@@ -150,16 +147,19 @@ function App() {
       </SignedOut>
 
       <SignedIn>
-        <header className="bg-white shadow">
+        <header className="bg-white dark:bg-gray-800 shadow">
           <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">Relatório de Atividades</h1>
-            <UserButton />
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Relatório de Atividades</h1>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <UserButton />
+            </div>
           </div>
         </header>
 
         <div className="max-w-6xl mx-auto p-6">
           <div className="mb-8">
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Gerencie suas atividades diárias e acompanhe suas horas trabalhadas
             </p>
           </div>
@@ -178,33 +178,33 @@ function App() {
                     activities={activities}
                   />
 
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                       <Clock className="w-6 h-6" />
                       Resumo do Mês
                     </h2>
-                    <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                      <span className="text-gray-700">Total de Horas Trabalhadas:</span>
-                      <span className="text-2xl font-bold text-blue-600">{totalHours}h</span>
+                    <div className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+                      <span className="text-gray-700 dark:text-gray-200">Total de Horas Trabalhadas:</span>
+                      <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{totalHours}h</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                     <CalendarIcon className="w-6 h-6" />
                     Atividades Recentes
                   </h2>
                   <div className="space-y-4">
                     {Object.entries(activities).map(([date, activity]) => (
-                      <div key={date} className="border-b pb-4">
+                      <div key={date} className="border-b dark:border-gray-700 pb-4">
                         <div className="flex justify-between items-start mb-2">
-                          <span className="text-sm font-medium text-gray-600">{date}</span>
-                          <span className="text-sm text-blue-600 font-medium">{activity.hours}h</span>
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{date}</span>
+                          <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">{activity.hours}h</span>
                         </div>
                         <div className="text-sm">
-                          <p className="text-gray-500 mb-1">Projeto: {activity.project}</p>
-                          <p className="text-gray-700">{activity.description}</p>
+                          <p className="text-gray-500 dark:text-gray-400 mb-1">Projeto: {activity.project}</p>
+                          <p className="text-gray-700 dark:text-gray-200">{activity.description}</p>
                         </div>
                       </div>
                     ))}
@@ -212,25 +212,25 @@ function App() {
                 </div>
               </div>
 
-              <div className="mt-8 bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Exportar Relatório</h2>
+              <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Exportar Relatório</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                       Nome do Profissional
                     </label>
                     <input
                       type="text"
                       value={profissional}
                       onChange={(e) => setProfissional(e.target.value)}
-                      className="w-full max-w-md p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full max-w-md p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       placeholder="Digite seu nome"
                     />
                   </div>
                   <button
                     onClick={handleExportCSV}
                     disabled={!profissional || Object.keys(activities).length === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:disabled:bg-gray-600"
                   >
                     <Download className="w-4 h-4" />
                     Exportar CSV
