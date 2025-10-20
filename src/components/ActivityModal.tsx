@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { X } from 'lucide-react';
+import React, { useState } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { X } from "lucide-react";
 
 interface ActivityModalProps {
   isOpen: boolean;
   onClose: () => void;
   date: Date;
-  onSave: (activity: { description: string; hours: number; project: string }) => void;
+  onSave: (activity: {
+    description: string;
+    hours: number;
+    project: string;
+  }) => void;
   currentActivity?: { description: string; hours: number; project: string };
 }
 
-export function ActivityModal({ isOpen, onClose, date, onSave, currentActivity }: ActivityModalProps) {
-  const [description, setDescription] = useState(currentActivity?.description || '');
+export function ActivityModal({
+  isOpen,
+  onClose,
+  date,
+  onSave,
+  currentActivity,
+}: ActivityModalProps) {
+  const [description, setDescription] = useState(
+    currentActivity?.description || "",
+  );
   const [hours, setHours] = useState(currentActivity?.hours || 0);
-  const [project, setProject] = useState(currentActivity?.project || '');
+  const [project, setProject] = useState(currentActivity?.project || "");
 
   if (!isOpen) return null;
 
@@ -31,7 +43,10 @@ export function ActivityModal({ isOpen, onClose, date, onSave, currentActivity }
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
             Atividade para {format(date, "d 'de' MMMM", { locale: ptBR })}
           </h3>
-          <button onClick={onClose} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+          <button
+            onClick={onClose}
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+          >
             <X className="w-6 h-6" />
           </button>
         </div>
