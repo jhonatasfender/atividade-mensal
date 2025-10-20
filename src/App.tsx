@@ -133,7 +133,7 @@ function App() {
 
   const totalHours = Object.values(activities).reduce(
     (sum, activity) => sum + activity.hours,
-    0
+    0,
   );
 
   const handleExportCSV = () => {
@@ -302,9 +302,7 @@ function App() {
           onClose={() => setIsModalOpen(false)}
           date={selectedDate}
           onSave={handleSaveActivity}
-          currentActivity={
-            activities[selectedDate.toISOString().split("T")[0]]
-          }
+          currentActivity={activities[selectedDate.toISOString().split("T")[0]]}
         />
       </SignedIn>
     </div>
